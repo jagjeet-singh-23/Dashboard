@@ -11,6 +11,11 @@ import generalRoutes from "./routes/general.js";
 import managementRoutes from "./routes/management.js";
 import salesRoutes from "./routes/sales.js";
 
+// DATA IMPORTS
+
+import User from "./models/User.js";
+import { dataUser } from "./data/index.js";
+
 // CONFIGURATION
 
 dotenv.config();
@@ -38,7 +43,9 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() =>
-    app.listen(PORT, () => console.log(`Server listening on port:${PORT}`))
-  )
-  .catch(err => console.log(`${err} did not connect`));
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server listening on port:${PORT}`));
+    // Insert Data into the database only once
+    User.insertMany(dataUser);
+  })
+  .catch((err) => console.log(`${err} did not connect`));
