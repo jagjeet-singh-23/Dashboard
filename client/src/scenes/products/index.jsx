@@ -1,32 +1,31 @@
 import React, { useState } from "react";
 import {
   Box,
-  Button,
-  Typography,
   Card,
   CardActions,
   CardContent,
   Collapse,
+  Button,
+  Typography,
   Rating,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { useGetProductsQuery } from "state/api";
 import Header from "components/Header";
+import { useGetProductsQuery } from "state/api";
 
 const Product = ({
   _id,
   name,
   description,
-  category,
   price,
-  supply,
   rating,
+  category,
+  supply,
   stat,
 }) => {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
-
   return (
     <Card
       sx={{
@@ -59,7 +58,7 @@ const Product = ({
           size="small"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          {!isExpanded ? "See More" : "Show Less"}
+          {!isExpanded ? "See More" : "See Less"}
         </Button>
       </CardActions>
       <Collapse
@@ -87,35 +86,47 @@ const Product = ({
 
 const Products = () => {
   const { data, isLoading } = useGetProductsQuery();
+  console.log(data[3].stat.yearlySalesTotal);
   const isNonMobile = useMediaQuery("(min-width: 1000px)");
   return (
-    <Box m="1.5rem 2rem">
-      <Header title={"PRODUCTS"} subTitle={"Your list of products."} />
+    <Box m="1.5rem 2.5rem">
+      <Header title="PRODUCTS" subtitle="See your list of products." />
       {data || !isLoading ? (
         <Box
           mt="20px"
-          display={"grid"}
-          gridTemplateColumns={"repeat(4, minmax(0, 1fr))"}
-          justifyContent={"space-between"}
-          rowGap={"20px"}
-          columnGap={"1.33%"}
+          display="grid"
+          gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+          justifyContent="space-between"
+          rowGap="20px"
+          columnGap="1.33%"
           sx={{
-            "& < div": { gridColumn: isNonMobile ? undefined : "span 4" },
+            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
           }}
         >
-          {data.map((product) => (
-            <Product
-              key={product._id}
-              _id={product._id}
-              name={product.name}
-              description={product.description}
-              category={product.category}
-              price={product.price}
-              rating={product.rating}
-              supply={product.supply}
-              stat={product.stat}
-            />
-          ))}
+          {data.map(
+            ({
+              _id,
+              name,
+              description,
+              price,
+              rating,
+              category,
+              supply,
+              stat,
+            }) => (
+              <Product
+                key={_id}
+                _id={_id}
+                name={name}
+                description={description}
+                price={price}
+                rating={rating}
+                category={category}
+                supply={supply}
+                stat={stat}
+              />
+            )
+          )}
         </Box>
       ) : (
         <>Loading...</>
